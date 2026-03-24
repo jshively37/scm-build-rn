@@ -9,6 +9,7 @@ BASE_AUTH_URL = "https://auth.apps.paloaltonetworks.com/auth/v1/oauth2/access_to
 URL_ENDPOINTS = {
     "ike_crypto_profiles": "https://api.strata.paloaltonetworks.com/config/network/v1/ike-crypto-profiles",
     "ipsec_crypto_profiles": "https://api.strata.paloaltonetworks.com/config/network/v1/ipsec-crypto-profiles",
+    "ike_gateways": "https://api.strata.paloaltonetworks.com/config/network/v1/ike-gateways",
 }
 
 INPUT_FILE = "remote_networks.yaml"
@@ -81,6 +82,26 @@ def create_ipsec_crypto_profile(ipsec_crypto_profile, url_endpoint):
     print(response.text)
 
 
+def create_ike_gateway(ike_gateway, url_endpoint):
+    payload = json.dumps(
+        {
+            "name": ike_gateway["name"],
+            "folder": ike_gateway["folder"],
+            "authentication": {
+                "pre_shared_key": {"key": ike_gateway["pre_shared_key"]}
+            },
+            "peer_address": {"ip": ike_gateway["peer_address"]},
+            "protocol": {
+                "ikev2": {
+                    "ike_crypto_profile": ike_gateway["ike_crypto_profile"],
+                }
+            },
+        }
+    )
+    response = requests.request("POST", url_endpoint, headers=HEADERS, data=payload)
+    print(response.text)
+
+
 if __name__ == "__main__":
     create_token()
     with open(INPUT_FILE, "r") as f:
@@ -90,6 +111,9 @@ if __name__ == "__main__":
 
     ipsec_crypto_profiles = get_profiles(URL_ENDPOINTS["ipsec_crypto_profiles"])
     ipsec_crypto_names = [item["name"] for item in ipsec_crypto_profiles["data"]]
+
+    ike_gateways = get_profiles(URL_ENDPOINTS["ike_gateways"])
+    ike_gateways_names = [item["name"] for item in ike_gateways["data"]]
 
     for ike_crypto_profile in data["ike_crypto_profiles"]:
         if ike_crypto_profile["name"] not in ike_crypto_names:
@@ -106,3 +130,9 @@ if __name__ == "__main__":
             )
         else:
             print(f"{ipsec_crypto_profile['name']} already exists, skipping creation.")
+
+    for ike_gateway in data["ike_gateways"]:
+        if ike_gateway["name"] not in ike_gateways_names:
+            create_ike_gateway(ike_gateway, URL_ENDPOINTS["ike_gateways"])
+        else:
+            print(f"{ike_gateway['name']} already exists, skipping creation.")

@@ -18,10 +18,11 @@ ipsec_crypto_profiles:
 
 # IKE Gateway
 ike_gateways:
-  - name: "Azure US East"
+  - name: "azure_us_east"
     folder: "Remote Networks"
     peer_address: 1.1.1.1
     pre_shared_key: "test123"
+    ike_crypto_profile: default_ike_profile
 
 # IPSEC Tunnels
 ipsec_tunnels:
