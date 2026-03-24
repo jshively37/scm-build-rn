@@ -42,11 +42,10 @@ def create_token():
     HEADERS.update({"Authorization": f'Bearer {token["access_token"]}'})
 
 
-def get_ike_crypto_profiles(url_endpoint):
+def get_profiles(url_endpoint):
     endpoint = f"{url_endpoint}?folder={FOLDER}"
     response = requests.request("GET", endpoint, headers=HEADERS)
     return response.json()
-
 
 def create_crypto_profile(ike_crypto_profile, url_endpoint):
     payload = json.dumps(
@@ -68,7 +67,7 @@ if __name__ == "__main__":
     create_token()
     with open(INPUT_FILE, "r") as f:
         data = yaml.safe_load(f)
-    ike_crypto_profiles = get_ike_crypto_profiles(URL_ENDPOINTS["ike_crypto_profiles"])
+    ike_crypto_profiles = get_profiles(URL_ENDPOINTS["ike_crypto_profiles"])
     ike_crypto_names = [item["name"] for item in ike_crypto_profiles["data"]]
 
     for ike_crypto_profile in data["ike_crypto_profiles"]:
