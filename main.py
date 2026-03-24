@@ -47,7 +47,7 @@ def get_profiles(url_endpoint):
     response = requests.request("GET", endpoint, headers=HEADERS)
     return response.json()
 
-def create_crypto_profile(ike_crypto_profile, url_endpoint):
+def create_ike_crypto_profile(ike_crypto_profile, url_endpoint):
     payload = json.dumps(
         {
             "name": ike_crypto_profile["name"],
@@ -63,6 +63,21 @@ def create_crypto_profile(ike_crypto_profile, url_endpoint):
     response = requests.request("POST", url_endpoint, headers=HEADERS, data=payload)
     print(response.text)
 
+def create_ipsec_crypto_profile(ipsec_crypto_profile, url_endpoint):
+    payload = json.dumps({
+        "name": ipsec_crypto_profile["name"],
+        "folder": ipsec_crypto_profile["folder"],
+        "lifetime": {"seconds": ipsec_crypto_profile["lifetime_seconds"]},
+        "esp": {
+            "encryption": [ipsec_crypto_profile["encryption_algorithm"]],
+            "authentication": [ipsec_crypto_profile["hash"]],
+        }
+    })
+    response = requests.request("POST", url_endpoint, headers=HEADERS, data=payload)
+    print(response.text)
+
+
+
 if __name__ == "__main__":
     create_token()
     with open(INPUT_FILE, "r") as f:
@@ -70,10 +85,21 @@ if __name__ == "__main__":
     ike_crypto_profiles = get_profiles(URL_ENDPOINTS["ike_crypto_profiles"])
     ike_crypto_names = [item["name"] for item in ike_crypto_profiles["data"]]
 
+    ipsec_crypto_profiles = get_profiles(URL_ENDPOINTS["ipsec_crypto_profiles"])
+    ipsec_crypto_names = [item["name"] for item in ipsec_crypto_profiles["data"]]
+
     for ike_crypto_profile in data["ike_crypto_profiles"]:
         if ike_crypto_profile["name"] not in ike_crypto_names:
-            create_crypto_profile(
+            create_ike_crypto_profile(
                 ike_crypto_profile, URL_ENDPOINTS["ike_crypto_profiles"]
             )
         else:
             print(f"{ike_crypto_profile['name']} already exists, skipping creation.")
+
+    for ipsec_crypto_profile in data["ipsec_crypto_profiles"]:
+        if ipsec_crypto_profile["name"] not in ipsec_crypto_names:
+            create_ipsec_crypto_profile(
+                ipsec_crypto_profile, URL_ENDPOINTS["ipsec_crypto_profiles"]
+            )
+        else:
+            print(f"{ipsec_crypto_profile['name']} already exists, skipping creation.")
