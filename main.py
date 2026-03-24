@@ -46,17 +46,20 @@ def get_ike_crypto_profiles(url_endpoint):
     response = requests.request("GET", endpoint, headers=HEADERS)
     return response.json()
 
+
 def create_crypto_profile(ike_crypto_profile, url_endpoint):
-    payload = json.dumps({
-        "name": ike_crypto_profile["name"],
-        "folder": ike_crypto_profile["folder"],
-        "hash": [
-            ike_crypto_profile["hash"],
-        ],
-        "encryption": [ike_crypto_profile["encryption"]],
-        "dh_group": [ike_crypto_profile["dh_group"]],
-        "lifetime": {"seconds": ike_crypto_profile["lifetime_seconds"]},
-    })
+    payload = json.dumps(
+        {
+            "name": ike_crypto_profile["name"],
+            "folder": ike_crypto_profile["folder"],
+            "hash": [
+                ike_crypto_profile["hash"],
+            ],
+            "encryption": [ike_crypto_profile["encryption"]],
+            "dh_group": [ike_crypto_profile["dh_group"]],
+            "lifetime": {"seconds": ike_crypto_profile["lifetime_seconds"]},
+        }
+    )
     response = requests.request("POST", url_endpoint, headers=HEADERS, data=payload)
     print(response.text)
 
@@ -66,8 +69,10 @@ if __name__ == "__main__":
     with open(INPUT_FILE, "r") as f:
         data = yaml.safe_load(f)
     ike_crypto_profiles = get_ike_crypto_profiles(URL_ENDPOINTS["ike_crypto_profiles"])
-    ike_crypto_names = [item['name'] for item in ike_crypto_profiles['data']]
+    ike_crypto_names = [item["name"] for item in ike_crypto_profiles["data"]]
 
     for ike_crypto_profile in data["ike_crypto_profiles"]:
         if ike_crypto_profile["name"] not in ike_crypto_names:
-            create_crypto_profile(ike_crypto_profile, URL_ENDPOINTS["ike_crypto_profiles"])
+            create_crypto_profile(
+                ike_crypto_profile, URL_ENDPOINTS["ike_crypto_profiles"]
+            )
