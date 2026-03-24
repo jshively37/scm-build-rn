@@ -1,0 +1,45 @@
+# IKE Crypto Profile
+ike_crypto_profiles:
+  - name: default_ike_profile
+    folder: "Remote Networks"
+    hash: sha512
+    encryption: aes-256-cbc
+    dh_group: group20
+    lifetime_seconds: 3600
+
+# IPSEC Crypto Profile
+ipsec_crypto_profiles:
+  - name: default_ipsec_profile
+    folder: "Remote Networks"
+    hash: sha512
+    encryption_algorithm: aes-256-cbc
+    dh_group: group20
+    lifetime_seconds: 3600
+
+# IKE Gateway
+ike_gateways:
+  - name: "Azure US East"
+    folder: "Remote Networks"
+    peer_address: 1.1.1.1
+    pre_shared_key: "test123"
+
+# IPSEC Tunnels
+ipsec_tunnels:
+  - name: "Azure US East"
+    folder: "Remote Networks"
+    ike_gateway: default_ike_gateway
+    ipsec_crypto_profile: default_ipsec_profile
+    anti_replay: true
+    copy_tos: false
+    enable_gre_encapsulation: false
+
+# Remote Networks
+remote_networks:
+  - name: "Azure US East"
+    folder: "Remote Networks"
+    license_type: "FWASS-AGGREGATE"
+    region: "us-east"
+    spn_name: ""
+    ipsec_tunnel: "Azure US East"
+    subnets:
+      - "172.16.32.0/24"
