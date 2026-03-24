@@ -47,6 +47,7 @@ def get_profiles(url_endpoint):
     response = requests.request("GET", endpoint, headers=HEADERS)
     return response.json()
 
+
 def create_ike_crypto_profile(ike_crypto_profile, url_endpoint):
     payload = json.dumps(
         {
@@ -63,19 +64,21 @@ def create_ike_crypto_profile(ike_crypto_profile, url_endpoint):
     response = requests.request("POST", url_endpoint, headers=HEADERS, data=payload)
     print(response.text)
 
+
 def create_ipsec_crypto_profile(ipsec_crypto_profile, url_endpoint):
-    payload = json.dumps({
-        "name": ipsec_crypto_profile["name"],
-        "folder": ipsec_crypto_profile["folder"],
-        "lifetime": {"seconds": ipsec_crypto_profile["lifetime_seconds"]},
-        "esp": {
-            "encryption": [ipsec_crypto_profile["encryption_algorithm"]],
-            "authentication": [ipsec_crypto_profile["hash"]],
+    payload = json.dumps(
+        {
+            "name": ipsec_crypto_profile["name"],
+            "folder": ipsec_crypto_profile["folder"],
+            "lifetime": {"seconds": ipsec_crypto_profile["lifetime_seconds"]},
+            "esp": {
+                "encryption": [ipsec_crypto_profile["encryption_algorithm"]],
+                "authentication": [ipsec_crypto_profile["hash"]],
+            },
         }
-    })
+    )
     response = requests.request("POST", url_endpoint, headers=HEADERS, data=payload)
     print(response.text)
-
 
 
 if __name__ == "__main__":
