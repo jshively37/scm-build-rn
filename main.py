@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 BASE_AUTH_URL = "https://auth.apps.paloaltonetworks.com/auth/v1/oauth2/access_token"
 URL_ENDPOINTS = {
     "ike_crypto_profiles": "https://api.strata.paloaltonetworks.com/config/network/v1/ike-crypto-profiles",
+    "ipsec_crypto_profiles": "https://api.strata.paloaltonetworks.com/config/network/v1/ipsec-crypto-profiles",
 }
 
 INPUT_FILE = "remote_networks.yaml"
@@ -63,7 +64,6 @@ def create_crypto_profile(ike_crypto_profile, url_endpoint):
     response = requests.request("POST", url_endpoint, headers=HEADERS, data=payload)
     print(response.text)
 
-
 if __name__ == "__main__":
     create_token()
     with open(INPUT_FILE, "r") as f:
@@ -76,3 +76,5 @@ if __name__ == "__main__":
             create_crypto_profile(
                 ike_crypto_profile, URL_ENDPOINTS["ike_crypto_profiles"]
             )
+        else:
+            print(f"{ike_crypto_profile['name']} already exists, skipping creation.")
