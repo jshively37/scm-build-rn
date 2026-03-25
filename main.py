@@ -10,6 +10,8 @@ URL_ENDPOINTS = {
     "ike_crypto_profiles": "https://api.strata.paloaltonetworks.com/config/network/v1/ike-crypto-profiles",
     "ipsec_crypto_profiles": "https://api.strata.paloaltonetworks.com/config/network/v1/ipsec-crypto-profiles",
     "ike_gateways": "https://api.strata.paloaltonetworks.com/config/network/v1/ike-gateways",
+    "ipsec_tunnels": "https://api.strata.paloaltonetworks.com/config/network/v1/ipsec-tunnels",
+    "remote_networks": "https://api.strata.paloaltonetworks.com/config/deployment/v1/remote-networks",
 }
 
 INPUT_FILE = "remote_networks.yaml"
@@ -102,6 +104,37 @@ def create_ike_gateway(ike_gateway, url_endpoint):
     print(response.text)
 
 
+def create_ipsec_tunnel(ipsec_tunnel, url_endpoint):
+    payload = json.dumps(
+        {
+            "name": ipsec_tunnel["name"],
+            "folder": ipsec_tunnel["folder"],
+            "auto_key": {
+                "ike_gateway": [{"name": ipsec_tunnel["ike_gateway"]}],
+                "ipsec_crypto_profile": ipsec_tunnel["ipsec_crypto_profile"],
+            },
+        }
+    )
+    response = requests.request("POST", url_endpoint, headers=HEADERS, data=payload)
+    print(response.text)
+
+
+def create_remote_network(remote_network, url_endpoint):
+    payload = json.dumps(
+        {
+            "name": remote_network["name"],
+            "folder": remote_network["folder"],
+            "license_type": "FWAAS-AGGREGATE",
+            "region": remote_network["region"],
+            "spn_name": remote_network["spn_name"],
+            "ipsec_tunnel": remote_network["ipsec_tunnel"],
+            "subnets": remote_network["subnets"],
+        }
+    )
+    response = requests.request("POST", url_endpoint, headers=HEADERS, data=payload)
+    print(response.text)
+
+
 if __name__ == "__main__":
     create_token()
     with open(INPUT_FILE, "r") as f:
@@ -114,6 +147,12 @@ if __name__ == "__main__":
 
     ike_gateways = get_profiles(URL_ENDPOINTS["ike_gateways"])
     ike_gateways_names = [item["name"] for item in ike_gateways["data"]]
+
+    ipsec_tunnels = get_profiles(URL_ENDPOINTS["ipsec_tunnels"])
+    ipsec_tunnels_names = [item["name"] for item in ipsec_tunnels["data"]]
+
+    remote_networks = get_profiles(URL_ENDPOINTS["remote_networks"])
+    remote_networks_names = [item["name"] for item in remote_networks["data"]]
 
     for ike_crypto_profile in data["ike_crypto_profiles"]:
         if ike_crypto_profile["name"] not in ike_crypto_names:
@@ -136,3 +175,9 @@ if __name__ == "__main__":
             create_ike_gateway(ike_gateway, URL_ENDPOINTS["ike_gateways"])
         else:
             print(f"{ike_gateway['name']} already exists, skipping creation.")
+
+    for remote_network in data["remote_networks"]:
+        if remote_network["name"] not in remote_networks_names:
+            create_remote_network(remote_network, URL_ENDPOINTS["remote_networks"])
+        else:
+            print(f"{remote_network['name']} already exists, skipping creation.")

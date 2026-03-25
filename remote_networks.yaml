@@ -26,9 +26,9 @@ ike_gateways:
 
 # IPSEC Tunnels
 ipsec_tunnels:
-  - name: "Azure US East"
+  - name: "azure_us_east_tunnel"
     folder: "Remote Networks"
-    ike_gateway: default_ike_gateway
+    ike_gateway: azure_us_east
     ipsec_crypto_profile: default_ipsec_profile
     anti_replay: true
     copy_tos: false
@@ -38,9 +38,8 @@ ipsec_tunnels:
 remote_networks:
   - name: "Azure US East"
     folder: "Remote Networks"
-    license_type: "FWASS-AGGREGATE"
     region: "us-east"
-    spn_name: ""
-    ipsec_tunnel: "Azure US East"
+    spn_name: "us-east-cherry"
+    ipsec_tunnel: "azure_us_east_tunnel"
     subnets:
       - "172.16.32.0/24"
