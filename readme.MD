@@ -15,7 +15,7 @@ Use at your own discretion.
 ## Limitations:
 * Bandwidth must already be allocated to the region.
 * Each payload only has a subset of the available options. If you need other IPSEC, IKE, etc. options you'll have to add them.
-* Only checks if the object already exists. It doesn't compare to see if there are any changes. i.e. if you change the encrpytion_algoritm in the IPsec profile it won't update. You'll need to manually update or delete the object from Prisma Access.
+* Only checks if the object already exists. It doesn't compare to see if there are any changes. i.e. if you change the `encrpytion_algoritm` in the IPsec profile it won't update. You'll need to manually update or delete the object from Prisma Access.
 
 ## Creating a service account in Prisma Access
 
