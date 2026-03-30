@@ -6,12 +6,14 @@ import yaml
 from dotenv import load_dotenv
 
 BASE_AUTH_URL = "https://auth.apps.paloaltonetworks.com/auth/v1/oauth2/access_token"
+BASE_API_URL = "https://api.strata.paloaltonetworks.com"
+
 URL_ENDPOINTS = {
-    "ike_crypto_profiles": "https://api.strata.paloaltonetworks.com/config/network/v1/ike-crypto-profiles",
-    "ipsec_crypto_profiles": "https://api.strata.paloaltonetworks.com/config/network/v1/ipsec-crypto-profiles",
-    "ike_gateways": "https://api.strata.paloaltonetworks.com/config/network/v1/ike-gateways",
-    "ipsec_tunnels": "https://api.strata.paloaltonetworks.com/config/network/v1/ipsec-tunnels",
-    "remote_networks": "https://api.strata.paloaltonetworks.com/config/deployment/v1/remote-networks",
+    "ike_crypto_profiles": f"{BASE_API_URL}/config/network/v1/ike-crypto-profiles",
+    "ipsec_crypto_profiles": f"{BASE_API_URL}/config/network/v1/ipsec-crypto-profiles",
+    "ike_gateways": f"{BASE_API_URL}/config/network/v1/ike-gateways",
+    "ipsec_tunnels": f"{BASE_API_URL}/config/network/v1/ipsec-tunnels",
+    "remote_networks": f"{BASE_API_URL}/config/deployment/v1/remote-networks",
 }
 
 INPUT_FILE = "remote_networks.yaml"
