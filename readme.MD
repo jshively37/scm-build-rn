@@ -38,7 +38,7 @@ OSX: source venv/bin/activate \
 
 Install the dependencies using `pip install -r requirements.txt`
 
-Copy `.env.example` to `.env` and populate your variables in this file generated while creating the service account. The .env is included in the .gitignore to ensure it does not accidentally get checked into a git repo.
+Copy `env.example` to `.env` and populate your variables in this file generated while creating the service account. The .env is included in the .gitignore to ensure it does not accidentally get checked into a git repo.
 
 A sample `remote_networks.yaml` is provided. If you need to any fields you will need to add the corresponding logic to `main.py`
 
