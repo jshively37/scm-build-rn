@@ -178,6 +178,12 @@ if __name__ == "__main__":
         else:
             print(f"{ike_gateway['name']} already exists, skipping creation.")
 
+    for ipsec_tunnel in data["ipsec_tunnels"]:
+        if ipsec_tunnel["name"] not in ipsec_tunnels_names:
+            create_ipsec_tunnel(ipsec_tunnel, URL_ENDPOINTS["ipsec_tunnels"])
+        else:
+            print(f"{ipsec_tunnel['name']} already exists, skipping creation.")
+
     for remote_network in data["remote_networks"]:
         if remote_network["name"] not in remote_networks_names:
             create_remote_network(remote_network, URL_ENDPOINTS["remote_networks"])
