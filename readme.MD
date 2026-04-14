@@ -43,5 +43,3 @@ Copy `env.example` to `.env` and populate your variables in this file generated 
 A sample `remote_networks.yaml` is provided. If you need to any fields you will need to add the corresponding logic to `main.py`
 
 Run: `python main.py`
-
-You will be prompted for a number of domains to create.
